@@ -1,0 +1,51 @@
+apakah ini sudah benar? public function tampil_cari($nim,$nama,$alamat)
+    {
+       
+        $sql = "SELECT * FROM tb_mhsw WHERE mhsw_nim LIKE % AND mhsw_nama LIKE % AND mhsw_alamat LIKE %";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':mhsw_nim', $nim);
+        $stmt->bindParam(':mhsw_nama', $nama);
+        $stmt->bindParam(':mhsw_alamat', $alamat);
+        $stmt->execute();
+
+        $data = [];
+        while ($rows = $stmt->fetch()) {
+            $data[] = $rows;
+            }
+        return $data;
+
+Tidak, ada beberapa kesalahan dalam syntax yang diberikan. Berikut adalah perbaikan dari syntax pencarian data di OOP PHP PDO database dengan 3 parameter berdasarkan huruf atau angka:
+
+php
+
+public function tampil_cari($nim, $nama, $alamat)
+{
+    try {
+        $searchNim = '%' . $nim . '%';
+        $searchNama = '%' . $nama . '%';
+        $searchAlamat = '%' . $alamat . '%';
+
+        $sql = "SELECT * FROM tb_mhsw WHERE mhsw_nim LIKE :mhsw_nim AND mhsw_nama LIKE :mhsw_nama AND mhsw_alamat LIKE :mhsw_alamat";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':mhsw_nim', $searchNim);
+        $stmt->bindParam(':mhsw_nama', $searchNama);
+        $stmt->bindParam(':mhsw_alamat', $searchAlamat);
+        $stmt->execute();
+
+        $data = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+
+        return $data;
+    } catch (PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+    }
+}
+
+Perbaikan tersebut mencakup:
+
+    Menggunakan tanda persentase (%) sebelum dan sesudah variabel dalam binding parameter untuk melakukan pencarian berdasarkan huruf atau angka.
+    Memperbaiki nama binding parameter di dalam query agar sesuai dengan nama yang digunakan pada bindParam() (yaitu :mhsw_nim, :mhsw_nama, dan :mhsw_alamat).
+    Mengganti while($rows = $stmt->fetch()) menjadi while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) untuk mengambil data dalam bentuk array asosiatif.
+    Menambahkan try-catch block untuk menangani exception yang mungkin terjadi pada koneksi ke database. <|endoftext|>
